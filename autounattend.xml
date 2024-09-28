@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+  <!-- Windows PE Configuration Pass -->
+  <settings pass="windowsPE">
+    <!-- Language and Locale Settings -->
+    <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64">
+      <SetupUILanguage>
+        <UILanguage>en-GB</UILanguage>
+      </SetupUILanguage>
+      <InputLocale>en-GB</InputLocale>
+      <SystemLocale>en-GB</SystemLocale>
+      <UILanguage>en-GB</UILanguage>
+      <UserLocale>en-GB</UserLocale>
+    </component>
+    <!-- Allow Disk Configuration During Setup -->
+    <component name="Microsoft-Windows-Setup" processorArchitecture="amd64">
+      <DiskConfiguration>
+        <WillShowUI>Always</WillShowUI>
+      </DiskConfiguration>
+      <ImageInstall>
+        <OSImage>
+          <InstallFrom>
+            <MetaData wcm:action="add">
+              <Key>/image/index</Key>
+              <Value>6</Value> <!-- Index number for Windows 11 Pro, verify with DISM if necessary -->
+            </MetaData>
+          </InstallFrom>
+          <WillShowUI>OnError</WillShowUI>
+        </OSImage>
+      </ImageInstall>
+      <UserData>
+        <AcceptEula>true</AcceptEula>
+      </UserData>
+    </component>
+  </settings>
+
+  <!-- Offline Servicing Pass -->
+  <settings pass="offlineServicing">
+    <!-- Enable Features -->
+    <component name="Microsoft-Windows-Foundation-Package" processorArchitecture="amd64">
+      <EnableFeature>
+        <FeatureName>Microsoft-Hyper-V-All</FeatureName>
+        <PackageName>Microsoft-Windows-Foundation-Package~31bf3856ad364e35~amd64~~10.0.22000.1</PackageName>
+      </EnableFeature>
+      <EnableFeature>
+        <FeatureName>VirtualMachinePlatform</FeatureName>
+        <PackageName>Microsoft-Windows-Foundation-Package~31bf3856ad364e35~amd64~~10.0.22000.1</PackageName>
+      </EnableFeature>
+      <EnableFeature>
+        <FeatureName>Microsoft-Windows-Subsystem-Linux</FeatureName>
+        <PackageName>Microsoft-Windows-Foundation-Package~31bf3856ad364e35~amd64~~10.0.22000.1</PackageName>
+      </EnableFeature>
+      <EnableFeature>
+        <FeatureName>OpenSSH.Server</FeatureName>
+        <PackageName>Microsoft-Windows-Foundation-Package~31bf3856ad364e35~amd64~~10.0.22000.1</PackageName>
+      </EnableFeature>
+    </component>
+  </settings>
+
+  <!-- Specialize Pass -->
+  <settings pass="specialize">
+    <!-- Network Settings -->
+    <component name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64">
+      <DNSDomain>WORKGROUP</DNSDomain>
+      <UseDomainNameDevolution>false</UseDomainNameDevolution>
+      <EnableAdapterDomainNameRegistration>false</EnableAdapterDomainNameRegistration>
+    </component>
+    <!-- User Account Creation -->
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64">
+      <ComputerName>*</ComputerName>
+      <ShowWindowsLive>false</ShowWindowsLive>
+      <TimeZone>GMT Standard Time</TimeZone>
+      <UserAccounts>
+        <LocalAccounts>
+          <!-- Administrator Account -->
+          <LocalAccount wcm:action="add">
+            <Name>YourAdminName</Name>
+            <DisplayName>YourAdminName</DisplayName>
+            <Group>Administrators</Group>
+            <Password>
+              <Value>YourAdminPassword</Value>
+              <PlainText>true</PlainText>
+            </Password>
+          </LocalAccount>
+          <!-- Bobby User Account -->
+          <LocalAccount wcm:action="add">
+            <Name>bobby</Name>
+            <DisplayName>Bobby</DisplayName>
+            <Group>Administrators</Group>
+            <!-- Password will be set manually after installation -->
+          </LocalAccount>
+        </LocalAccounts>
+      </UserAccounts>
+      <!-- Auto-login Settings -->
+      <AutoLogon>
+        <Username>bobby</Username>
+        <Password>
+          <Value></Value>
+          <PlainText>true</PlainText>
+        </Password>
+        <Enabled>true</Enabled>
+        <LogonCount>1</LogonCount>
+      </AutoLogon>
+    </component>
+    <!-- Disable Built-in Administrator Account -->
+    <component name="Microsoft-Windows-Security-LSA" processorArchitecture="amd64">
+      <DisableAdministratorAccount>true</DisableAdministratorAccount>
+    </component>
+  </settings>
+
+  <!-- OOBE System Pass -->
+  <settings pass="oobeSystem">
+    <!-- Language and Locale Settings -->
+    <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64">
+      <InputLocale>en-GB</InputLocale>
+      <SystemLocale>en-GB</SystemLocale>
+      <UILanguage>en-GB</UILanguage>
+      <UserLocale>en-GB</UserLocale>
+    </component>
+    <!-- OOBE Settings -->
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64">
+      <OOBE>
+        <HideEULAPage>true</HideEULAPage>
+        <NetworkLocation>Work</NetworkLocation>
+        <SkipUserOOBE>true</SkipUserOOBE>
+        <SkipMachineOOBE>true</SkipMachineOOBE>
+        <ProtectYourPC>3</ProtectYourPC>
+      </OOBE>
+      <!-- Visual Settings -->
+      <VisualEffects>
+        <SystemDefaultBackgroundTheme>Dark</SystemDefaultBackgroundTheme>
+        <ThemeName>dark.theme</ThemeName>
+      </VisualEffects>
+      <!-- Registered Owner and Organization -->
+      <RegisteredOwner></RegisteredOwner>
+      <RegisteredOrganization></RegisteredOrganization>
+    </component>
+  </settings>
+</unattend>
